@@ -57,7 +57,7 @@
   }
 
   .btn {
-    @apply inline-block px-3 py-1.5 h-[45px] rounded-five text-base bg-white border border-solid;
+    @apply inline-block px-3 py-2 h-[45px] rounded-five text-basic border border-solid;
   }
 
   .btn-primary {

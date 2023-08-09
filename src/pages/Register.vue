@@ -154,6 +154,8 @@
     </div>
   </div>
 
+  <TermPop />
+
   <button class="btn btn-primary w-full">確定</button>
 </template>
 
@@ -164,6 +166,7 @@ import { useI18n } from 'vue-i18n'
 import { Form as VeeForm, Field, ErrorMessage } from 'vee-validate'
 import EyesIcon from '@/components/EyesIcon/index.vue'
 import TermItem from '@/components/TermItem/index.vue'
+import TermPop from '@/components/TermPop/index.vue'
 
 const { t } = useI18n()
 const form = ref(null)
@@ -178,7 +181,3 @@ onMounted(async() => {
 useHead({ title: t('seo.title.register-1') })
 
 </script>
-
-<style lang="scss" scoped>
-
-</style>

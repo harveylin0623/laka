@@ -28,9 +28,6 @@ module.exports = {
       fontSize: {
         basic: '15px'
       },
-      spacing: {
-        ten: '10px',
-      },
       borderRadius: {
         five: '5px'
       },
