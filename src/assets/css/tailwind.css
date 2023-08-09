@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: "PingFang TC";
+    @apply text-primary-3 bg-base text-basic;
+  }
+  
+  h1 {
+    @apply text-2xl font-medium;
+  }
+
+  h2 {
+    @apply text-xl font-medium;
+  }
+
+  h3 {
+    @apply text-base font-medium;
+  }
+
+  [type='checkbox'] {
+    @apply w-[16px] h-[16px] text-[#2172fa] border-gray-300 focus:ring-0 focus:ring-offset-0;
+  }
+
+  [type='radio'] {
+    @apply w-[16px] h-[16px] text-[#2172fa] border-gray-300 focus:ring-0 focus:ring-offset-0;
+  }
+
+  select {
+    background-position: right 0.6rem center;
+    @apply !pr-6 bg-[url('@/assets/image/select-down.png')] bg-[length:11px_6.5px];
+  }
+
+  textarea {
+    @apply min-h-[150px];
+  }
+}
+
+@layer components {
+  .row {
+    @apply -mx-3 flex flex-wrap;
+  }
+
+  .form-block {
+    @apply pl-[15px]  bg-white rounded-five; 
+  }
+
+  .form-control {
+    @apply block w-full px-3 py-1.5 border-0 text-right text-basic rounded-none focus:border-transparent focus:ring-0 focus:ring-transparent placeholder:text-primary-2;
+  }
+
+  .error-text {
+    color: red;
+    @apply pr-3 text-right text-xs;
+  }
+
+  .btn {
+    @apply inline-block px-3 py-1.5 h-[45px] rounded-five text-base bg-white border border-solid;
+  }
+
+  .btn-primary {
+    @apply text-white bg-primary-4 border-primary-4 hover:bg-primary-4 hover:border-primary-4;
+  }
+
+}

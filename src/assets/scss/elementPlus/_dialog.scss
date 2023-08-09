@@ -1,0 +1,24 @@
+.el-dialog {
+  --el-dialog-width: 576px;
+}
+
+.el-dialog__header {
+  margin-right: 0;
+  padding: 15px;
+}
+
+.el-dialog__body {
+  max-height: 500px;
+  padding: 15px;
+  overflow: auto;
+}
+
+.el-dialog__footer {
+  padding: 15px;
+}
+
+@media (max-width: 576px) {
+  .el-dialog {
+    --el-dialog-width: 95%;
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "seo": {
+    "title": {
+      "projectName": "六角",
+      "home": "首頁",
+      "register-1": "註冊(1)"
+    }
+  },
+  "validation": {
+    "required": "必填",
+    "phone": "手機號碼格式有誤",
+    "email": "電子信箱格式有誤",
+    "password": "密碼格式有誤",
+    "confirm_password": "確認密碼有誤"
+  },
+  "placeholder": {
+    "phone": "為您的帳號，共 10 碼",
+    "password": "6 - 12 碼英數字",
+    "userName": "請輸入您的姓名",
+    "recommandCode": "請輸入邀請碼"
+  }
+}
