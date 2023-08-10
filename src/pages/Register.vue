@@ -13,11 +13,7 @@
             rules="required|phone"
             inputmode="numeric"
           />
-          <ErrorMessage
-            as="p"
-            name="phone"
-            class="error-text"
-          />
+          <WrongMessage name="phone" />
         </div>
       </div>
       <div class="flex items-center py-[5px]">
@@ -32,11 +28,7 @@
             rules="required|password"
           />
           <EyesIcon v-model="visible1" />
-          <ErrorMessage
-            as="p"
-            name="password"
-            class="error-text"
-          />
+          <WrongMessage name="password" />
         </div>
       </div>
       <div class="flex items-center py-[5px]">
@@ -51,11 +43,7 @@
             rules="required|confirmed:password"
           />
           <EyesIcon v-model="visible2" />
-          <ErrorMessage
-            as="p"
-            name="confirm_password"
-            class="error-text"
-          />
+          <WrongMessage name="confirm_password" />
         </div>
       </div>
     </div>
@@ -71,11 +59,7 @@
             :placeholder="t('placeholder.userName')"
             rules="required"
           />
-          <ErrorMessage
-            as="p"
-            name="userName"
-            class="error-text"
-          />
+          <WrongMessage name="userName" />
         </div>
       </div>
       <div class="flex items-center py-[5px]">
@@ -92,11 +76,7 @@
             <option value="F">女性</option>
             <option value="S">保密</option>
           </Field>
-          <ErrorMessage
-            as="p"
-            name="gender"
-            class="error-text"
-          />
+          <WrongMessage name="gender" />
         </div>
       </div>
       <div class="flex items-center py-[5px]">
@@ -166,11 +146,7 @@
             rules="recommend_code"
             :placeholder="t('placeholder.recommend_code')"
           />
-          <ErrorMessage
-            as="p"
-            name="recommend_code"
-            class="error-text"
-          />
+          <WrongMessage name="recommend_code" />
         </div>
       </div>
     </div>
@@ -211,13 +187,14 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useI18n } from 'vue-i18n'
 import dayjs from 'dayjs'
-import { Form as VeeForm, Field, ErrorMessage } from 'vee-validate'
+import { Form as VeeForm, Field } from 'vee-validate'
 import flatPickr from 'vue-flatpickr-component'
 import zhTw from 'flatpickr/dist/l10n/zh-tw'
 import 'flatpickr/dist/flatpickr.css'
 import EyesIcon from '@/components/EyesIcon/index.vue'
 import TermItem from '@/components/TermItem/index.vue'
 import TermPopup from '@/components/TermPopup/index.vue'
+import WrongMessage from '@/components/WrongMessage/index.vue'
 import mmrmApi from '@/api/mmrm.js'
 
 const { t } = useI18n()

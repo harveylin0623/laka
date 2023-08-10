@@ -30,6 +30,7 @@
 
   select {
     background-position: right 0.6rem center;
+    direction: rtl;
     @apply !pr-7 bg-[url('@/assets/image/select-down.png')] bg-[length:11px_6.5px];
   }
 
