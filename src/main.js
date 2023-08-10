@@ -10,6 +10,8 @@ import App from './App.vue'
 import { directiveCurrency } from './directives/currency.js'
 import { directiveFocus } from './directives/focus.js'
 import { directiveVisible } from './directives/visible.js'
+import Loading from '@/components/Loading/index.vue'
+import TipModal from '@/components/Modal/TipModal.vue'
 import '@/assets/scss/elementPlus/index.scss'
 import '@/plugins/vee-validate.js'
 
@@ -22,6 +24,8 @@ app.config.devtools = import.meta.env.DEV
 app.directive('currency', directiveCurrency)
 app.directive('focus', directiveFocus)
 app.directive('visible', directiveVisible)
+app.component('Loading', Loading)
+app.component('TipModal', TipModal)
 app.use(i18n)
 app.use(router)
 app.use(pinia)

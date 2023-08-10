@@ -2,6 +2,7 @@
   <el-dialog
     v-model="isOpen"
     :show-close="false"
+    :close-on-click-modal="false"
     align-center
   >
     <template v-slot:header>
@@ -42,7 +43,7 @@ const emit = defineEmits(['confirm'])
 
 const isOpen = ref(false)
 
-const toggleModal = () => {
+const toggle = () => {
   isOpen.value = !isOpen.value
 }
 
@@ -50,7 +51,7 @@ const confirmHandler = () => {
   emit('confirm')
 }
 
-defineExpose({ toggleModal })
+defineExpose({ toggle })
 
 </script>
 

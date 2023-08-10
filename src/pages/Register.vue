@@ -1,6 +1,6 @@
 <template>
   <p class="pl-[15px] mb-2.5 text-primary-1">必填資訊</p>
-  <VeeForm ref="form">
+  <VeeForm ref="veeForm">
     <div class="form-block mb-2.5 divide-y divide-primary-2">
       <div class="flex items-center py-[5px]">
         <p>手機號碼</p>
@@ -164,6 +164,8 @@
 
   <TipModal ref="tipModal1" />
 
+  <Loading :is-loading="isLoading" />
+
   <button class="btn btn-primary w-full">確定</button>
 </template>
 
@@ -179,13 +181,13 @@ import 'flatpickr/dist/flatpickr.css'
 import EyesIcon from '@/components/EyesIcon/index.vue'
 import TermItem from '@/components/TermItem/index.vue'
 import TermPop from '@/components/TermPop/index.vue'
-import TipModal from '@/components/Modal/TipModal.vue'
 
 const { t } = useI18n()
-const form = ref(null)
+const veeForm = ref(null)
 const tipModal1 = ref(null)
 const visible1 = ref(false)
 const visible2 = ref(false)
+const isLoading = ref(false)
 const formData = reactive({
   gender: '',
   birthday: ''

@@ -19,6 +19,7 @@ module.exports = {
     extend: {
       colors: {
         base: '#f0f0f0',
+        mask: 'rgba(0, 0, 0, 0.7)',
         'page-name': '#4A4A4A',
         'primary-1': '#797979',
         'primary-2': '#C9C9C9',
