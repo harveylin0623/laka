@@ -22,6 +22,20 @@ const mmrmApi = {
       method: 'post',
       ...params
     })
+  },
+  searchStore(params = {}) {
+    return useBaseAxios({
+      url: '/store/search_store',
+      method: 'post',
+      ...params
+    })
+  },
+  storeInfo(params = {}) {
+    return useBaseAxios({
+      url: '/store/store_information',
+      method: 'post',
+      ...params
+    })
   }
 }
 

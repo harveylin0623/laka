@@ -119,11 +119,20 @@
         <p>推薦品牌</p>
         <div class="grow">
           <Field
+            v-model.number="formData.brand_id"
             as="select"
             name="brand"
             class="form-control"
+            @change="brandChange"
           >
-            <option value="">brand</option>
+            <option value="-1"></option>
+            <option
+              v-for="brand in brandList.data"
+              :key="brand.brand_id"
+              :value="brand.brand_id"
+            >
+              {{ brand.title }}
+            </option>
           </Field>
         </div>
       </div>
@@ -131,11 +140,19 @@
         <p>推薦門市</p>
         <div class="grow">
           <Field
+            v-model="formData.recommend_store_code"
             as="select"
             name="store"
             class="form-control"
           >
-            <option value="">store</option>
+            <option value=""></option>
+            <option
+              v-for="store in storeList.data"
+              :key="store.code"
+              :value="store.code"
+            >
+              {{ store.title }}
+            </option>
           </Field>
         </div>
       </div>
@@ -204,9 +221,13 @@ const visible1 = ref(false)
 const visible2 = ref(false)
 const isLoading = ref(false)
 const termList = reactive({ data: [] })
+const brandList = reactive({ data: [] })
+const storeList = reactive({ data: [] })
 const formData = reactive({
+  brand_id: -1,
   gender: '',
-  birthday: ''
+  birthday: '',
+  recommend_store_code: ''
 })
 
 const flatPickerConfig = reactive({
@@ -246,6 +267,26 @@ const agreeTerm = (termId) => {
   obj.isChecked = true
 }
 
+const getStoreList = async() => {
+  const { brand_id } = formData
+  if (brand_id === -1 ) return []
+  const responseA = await mmrmApi.searchStore({ data: { brand_ids: [brand_id] } })
+  const { store_ids } = responseA.results
+  if (store_ids.length === 0) return []
+  const responseB = await mmrmApi.storeInfo({
+    data: { store_ids, query_info: 'summary', all_brands_available: false }
+  })
+  return responseB.results.store_information
+}
+
+const brandChange = async() => {
+  isLoading.value = true
+  let list = await getStoreList()
+  formData.recommend_store_code = list.length > 0 ? list[0].code : ''
+  storeList.data = list
+  isLoading.value = false
+}
+
 const init = async() => {
   isLoading.value = true
   const [termData, brandData] = await Promise.all([
@@ -255,11 +296,8 @@ const init = async() => {
   const brandInfo = await mmrmApi.brandInfo({
     data: { brand_ids: brandData.results.brand_ids, full_info: false }
   })
-
-  console.log(termData)
-  console.log(brandData)
-  console.log(brandInfo)
   termList.data = createTermList(termData.results.term_information)
+  brandList.data = brandInfo.results.brand_information
   isLoading.value = false
 }
 
