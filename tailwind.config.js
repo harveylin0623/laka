@@ -23,7 +23,8 @@ module.exports = {
         'primary-1': '#797979',
         'primary-2': '#C9C9C9',
         'primary-3': '#292929',
-        'primary-4': '#8B169C'
+        'primary-4': '#8B169C',
+        'primary-5': '#007AFF'
       },
       fontSize: {
         basic: '15px'

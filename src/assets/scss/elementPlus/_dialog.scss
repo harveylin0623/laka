@@ -1,24 +1,25 @@
 .el-dialog {
-  --el-dialog-width: 576px;
+  --el-dialog-width: 360px;
+  --el-dialog-bg-color: rgba(242, 242, 242, 0.90);
+  --el-dialog-border-radius: 14px;
+  backdrop-filter: blur(11px);
+  @media (max-width: 360px) {
+    --el-dialog-width: 95%;
+  }
 }
 
 .el-dialog__header {
   margin-right: 0;
-  padding: 15px;
+  padding: 20px;
+  padding-bottom: 0;
 }
 
 .el-dialog__body {
   max-height: 500px;
-  padding: 15px;
+  padding: 20px;
   overflow: auto;
 }
 
 .el-dialog__footer {
-  padding: 15px;
-}
-
-@media (max-width: 576px) {
-  .el-dialog {
-    --el-dialog-width: 95%;
-  }
+  padding: 0;
 }

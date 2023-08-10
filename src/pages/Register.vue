@@ -162,6 +162,8 @@
 
   <TermPop />
 
+  <TipModal ref="tipModal1" />
+
   <button class="btn btn-primary w-full">確定</button>
 </template>
 
@@ -177,9 +179,11 @@ import 'flatpickr/dist/flatpickr.css'
 import EyesIcon from '@/components/EyesIcon/index.vue'
 import TermItem from '@/components/TermItem/index.vue'
 import TermPop from '@/components/TermPop/index.vue'
+import TipModal from '@/components/Modal/TipModal.vue'
 
 const { t } = useI18n()
 const form = ref(null)
+const tipModal1 = ref(null)
 const visible1 = ref(false)
 const visible2 = ref(false)
 const formData = reactive({
