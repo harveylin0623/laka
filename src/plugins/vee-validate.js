@@ -53,3 +53,13 @@ defineRule('confirmed', (value, [target], ctx) => {
   }
   return t('validation.confirm_password')
 })
+
+defineRule('recommend_code', (value) => {
+  if (!value || !value.length) {
+    return true
+  }
+  if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6}$/.test(value)) {
+    return t('validation.recommend_code')
+  }
+  return true
+})

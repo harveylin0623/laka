@@ -161,9 +161,15 @@
         <div class="grow">
           <Field
             type="text"
-            name="recommandCode"
+            name="recommend_code"
             class="form-control"
-            :placeholder="t('placeholder.recommandCode')"
+            rules="recommend_code"
+            :placeholder="t('placeholder.recommend_code')"
+          />
+          <ErrorMessage
+            as="p"
+            name="recommend_code"
+            class="error-text"
           />
         </div>
       </div>

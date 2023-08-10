@@ -12,13 +12,14 @@
     "email": "電子信箱格式有誤",
     "password": "密碼格式有誤",
     "confirm_password": "密碼與確認密碼不符",
-    "birthday": "請填寫出生日期"
+    "birthday": "請填寫出生日期",
+    "recommend_code": "6位英數字混和字元"
   },
   "placeholder": {
     "phone": "為您的帳號，共 10 碼",
     "password": "6 - 12 碼英數字",
     "userName": "請輸入您的姓名",
     "birthday": "請選擇出生日期",
-    "recommandCode": "請輸入邀請碼"
+    "recommend_code": "請輸入邀請碼"
   }
 }
