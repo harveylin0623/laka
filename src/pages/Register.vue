@@ -153,14 +153,28 @@
     </div>
   </VeeForm>
 
-  <div class="mt-[25px] mb-5">
+  <div
+    v-if="hasTermData"
+    class="mt-[25px] mb-5"
+  >
     <p class="pl-[15px] mb-2.5 text-primary-1">其他</p>
     <div class="space-y-2.5">
-      <TermItem />
+      <TermItem
+        v-for="term in termList.data"
+        :key="term.id"
+        :term-info="term"
+        @term-pop="openTermPopup"
+      />
     </div>
   </div>
 
-  <TermPop />
+  <TermPopup
+    v-for="term in termList.data"
+    :key="term.id"
+    v-model="term.isOpen"
+    :term-info="term"
+    @agree="agreeTerm"
+  />
 
   <TipModal ref="tipModal1" />
 
@@ -170,7 +184,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useI18n } from 'vue-i18n'
 import dayjs from 'dayjs'
@@ -180,7 +194,8 @@ import zhTw from 'flatpickr/dist/l10n/zh-tw'
 import 'flatpickr/dist/flatpickr.css'
 import EyesIcon from '@/components/EyesIcon/index.vue'
 import TermItem from '@/components/TermItem/index.vue'
-import TermPop from '@/components/TermPop/index.vue'
+import TermPopup from '@/components/TermPopup/index.vue'
+import mmrmApi from '@/api/mmrm.js'
 
 const { t } = useI18n()
 const veeForm = ref(null)
@@ -188,6 +203,7 @@ const tipModal1 = ref(null)
 const visible1 = ref(false)
 const visible2 = ref(false)
 const isLoading = ref(false)
+const termList = reactive({ data: [] })
 const formData = reactive({
   gender: '',
   birthday: ''
@@ -201,6 +217,8 @@ const flatPickerConfig = reactive({
   maxDate: new Date()
 })
 
+const hasTermData = computed(() => termList.data.length > 0)
+
 const setFlatPickerDate = () => {
   const maxDate = dayjs().subtract(18, 'year').month(0).date(1)
   const minDate = maxDate.subtract(100, 'year')
@@ -209,8 +227,45 @@ const setFlatPickerDate = () => {
   formData.birthday = maxDate.format('YYYY/MM/DD')
 }
 
+const createTermList = (lists) => {
+  if (lists.length === 0) return []
+  return lists[0].terms.reduce((prev, current) => {
+    prev.push({ ...current, isChecked: false, isOpen: false })
+    return prev
+  }, [])
+}
+
+const openTermPopup = (termId, isOpen = true) => {
+  const obj = termList.data.find(item => item.id === termId)
+  obj.isOpen = isOpen
+  return obj
+}
+
+const agreeTerm = (termId) => {
+  const obj = openTermPopup(termId, false)
+  obj.isChecked = true
+}
+
+const init = async() => {
+  isLoading.value = true
+  const [termData, brandData] = await Promise.all([
+    mmrmApi.term(),
+    mmrmApi.searchBrand()
+  ])
+  const brandInfo = await mmrmApi.brandInfo({
+    data: { brand_ids: brandData.results.brand_ids, full_info: false }
+  })
+
+  console.log(termData)
+  console.log(brandData)
+  console.log(brandInfo)
+  termList.data = createTermList(termData.results.term_information)
+  isLoading.value = false
+}
+
 onMounted(async() => {
   setFlatPickerDate()
+  init()
 })
 
 useHead({ title: t('seo.title.register-1') })

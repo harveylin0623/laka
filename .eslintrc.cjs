@@ -72,6 +72,10 @@ module.exports = {
       'atComponent': 'longform',
       'default': 'longform',
       'named': 'longform',
+    }],
+    'vue/v-on-event-hyphenation': ['error', 'always', {
+      'autofix': true,
+      'ignore': []
     }]
   }
 }

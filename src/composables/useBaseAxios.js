@@ -1,11 +1,22 @@
 import axios from 'axios'
-// import router from '@/router/index.js'
+import dayjs from 'dayjs'
+import { wm_sign } from '@/utilities/crypto.js'
 
 export const useBaseAxios = (options) => {
+  const { data = {}, ...other } = options
+  const requestSchema = {
+    request_parameter: { ...data },
+    timestamp: dayjs().format('YYYY/MM/DD HH:mm:ss')
+  }
+  const sign = wm_sign(requestSchema)
+
   const baseAxios = axios.create({
     baseURL: `${import.meta.env.VITE_API_HOST}/api`,
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Accept-Language': 'zh-TW',
+      'app-id': import.meta.env.VITE_APP_ID,
+      'device-uuid': '123'
     }
   })
 
@@ -21,5 +32,5 @@ export const useBaseAxios = (options) => {
     return Promise.reject(error)
   })
 
-  return baseAxios({ ...options }).then(res => res.data)
+  return baseAxios({ ...other, data: { sign } }).then(res => res.data)
 }
