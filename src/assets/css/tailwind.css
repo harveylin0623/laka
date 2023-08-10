@@ -30,7 +30,7 @@
 
   select {
     background-position: right 0.6rem center;
-    @apply !pr-6 bg-[url('@/assets/image/select-down.png')] bg-[length:11px_6.5px];
+    @apply !pr-7 bg-[url('@/assets/image/select-down.png')] bg-[length:11px_6.5px];
   }
 
   textarea {

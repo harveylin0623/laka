@@ -82,7 +82,7 @@
         <p>姓別</p>
         <div class="grow">
           <Field
-            v-model="gender"
+            v-model="formData.gender"
             as="select"
             name="gender"
             class="form-control"
@@ -102,6 +102,12 @@
       <div class="flex items-center py-[5px]">
         <p>出生日期</p>
         <div class="grow">
+          <flat-pickr
+            v-model="formData.birthday"
+            :config="flatPickerConfig"
+            class="form-control"
+            :placeholder="t('placeholder.birthday')"
+          />
         </div>
       </div>
     </div>
@@ -160,10 +166,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useHead } from '@unhead/vue'
 import { useI18n } from 'vue-i18n'
+import dayjs from 'dayjs'
 import { Form as VeeForm, Field, ErrorMessage } from 'vee-validate'
+import flatPickr from 'vue-flatpickr-component'
+import zhTw from 'flatpickr/dist/l10n/zh-tw'
+import 'flatpickr/dist/flatpickr.css'
 import EyesIcon from '@/components/EyesIcon/index.vue'
 import TermItem from '@/components/TermItem/index.vue'
 import TermPop from '@/components/TermPop/index.vue'
@@ -172,12 +182,38 @@ const { t } = useI18n()
 const form = ref(null)
 const visible1 = ref(false)
 const visible2 = ref(false)
-const gender = ref('M')
+const formData = reactive({
+  gender: '',
+  birthday: ''
+})
+
+const flatPickerConfig = reactive({
+  dateFormat: 'Y/m/d',
+  disableMobile: 'true',
+  locale: zhTw.zh_tw,
+  minDate: new Date(),
+  maxDate: new Date()
+})
+
+const setFlatPickerDate = () => {
+  const maxDate = dayjs().subtract(18, 'year').month(0).date(1)
+  const minDate = maxDate.subtract(100, 'year')
+  flatPickerConfig.minDate = minDate.toDate()
+  flatPickerConfig.maxDate = maxDate.toDate()
+  formData.birthday = maxDate.format('YYYY/MM/DD')
+}
 
 onMounted(async() => {
-  console.log(form.value)
+  setFlatPickerDate()
 })
 
 useHead({ title: t('seo.title.register-1') })
 
 </script>
+
+<style lang="scss">
+.flatpickr-day.selected {
+  background-color: #8B169C;
+  border-color: #8B169C;
+}
+</style>
