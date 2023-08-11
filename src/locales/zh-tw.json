@@ -3,7 +3,8 @@
     "title": {
       "projectName": "六角",
       "home": "首頁",
-      "register-1": "註冊(1)"
+      "register-1": "註冊(1)",
+      "register-2": "註冊(2)"
     }
   },
   "validation": {
@@ -21,5 +22,6 @@
     "name": "請輸入您的姓名",
     "birthday": "請選擇出生日期",
     "referrer_code": "請輸入邀請碼"
-  }
+  },
+  "send_verify_text": "已寄送驗證碼至 {mobile}，若您未收到驗證碼，請按下方「重新寄送驗證碼」。"
 }

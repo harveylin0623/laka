@@ -13,4 +13,8 @@ defineProps({
   name: { type: String, required: true }
 })
 
+defineOptions({
+  name: 'WrongMessage'
+})
+
 </script>

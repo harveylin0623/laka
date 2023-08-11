@@ -4,8 +4,8 @@
     ref="veeForm"
     :validation-schema="ruleSchema"
   >
-    <div class="form-block mb-2.5 divide-y divide-primary-2">
-      <div class="flex items-center py-[5px]">
+    <div class="form-block">
+      <div class="form-row">
         <p>手機號碼</p>
         <div class="grow">
           <Field
@@ -19,7 +19,7 @@
           <WrongMessage name="mobile" />
         </div>
       </div>
-      <div class="flex items-center py-[5px]">
+      <div class="form-row">
         <p>密碼</p>
         <div class="relative grow">
           <Field
@@ -34,7 +34,7 @@
           <WrongMessage name="password" />
         </div>
       </div>
-      <div class="flex items-center py-[5px]">
+      <div class="form-row">
         <p>密碼確認</p>
         <div class="relative grow">
           <Field
@@ -51,7 +51,7 @@
       </div>
     </div>
 
-    <div class="form-block mb-2.5 divide-y divide-primary-2">
+    <div class="form-block">
       <div class="flex items-center py-[5px]">
         <p>姓名</p>
         <div class="grow">
@@ -100,7 +100,7 @@
 
     <p class="pl-[15px] mt-[25px] mb-2.5 text-primary-1">選填資料</p>
 
-    <div class="form-block mb-2.5 divide-y divide-primary-2">
+    <div class="form-block">
       <div class="flex items-center py-[5px]">
         <p>推薦品牌</p>
         <div class="grow">

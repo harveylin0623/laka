@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 import Home from '@/pages/Home.vue'
 import Register from '@/pages/Register.vue'
+import Register2 from '@/pages/Register2.vue'
 
 const hashMode = createWebHashHistory()
 const historyMode = createWebHistory(import.meta.env.VITE_BASE_URL)
@@ -32,6 +33,16 @@ const router = createRouter({
         layout: 'DefaultLayout',
         pageName: '會員註冊',
         setpIndex: 1
+      }
+    },
+    {
+      path: '/register2',
+      name: 'register2',
+      component: Register2,
+      meta: {
+        layout: 'DefaultLayout',
+        pageName: '會員註冊',
+        setpIndex: 2
       }
     },
     {

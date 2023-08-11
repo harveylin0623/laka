@@ -45,7 +45,11 @@
   }
 
   .form-block {
-    @apply pl-[15px]  bg-white rounded-five; 
+    @apply pl-[15px] bg-white rounded-five divide-y divide-primary-2 mb-2.5; 
+  }
+
+  .form-row {
+    @apply flex items-center py-[5px];
   }
 
   .form-control {
@@ -58,11 +62,15 @@
   }
 
   .btn {
-    @apply inline-block px-3 py-2 h-[45px] rounded-five text-basic border border-solid;
+    @apply inline-block px-3 py-2 h-[45px] leading-[30px] rounded-five text-basic text-center border border-solid;
   }
 
   .btn-primary {
     @apply text-white bg-primary-4 border-primary-4 hover:bg-primary-4 hover:border-primary-4;
+  }
+
+  .btn-secondary {
+    @apply text-primary-1 bg-primary-2 border-primary-2 hover:bg-primary-2 hover:border-primary-2;
   }
 
 }
