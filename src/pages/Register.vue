@@ -207,12 +207,14 @@ import { Form as VeeForm, Field } from 'vee-validate'
 import flatPickr from 'vue-flatpickr-component'
 import zhTw from 'flatpickr/dist/l10n/zh-tw'
 import 'flatpickr/dist/flatpickr.css'
+import mmrmApi from '@/api/mmrm.js'
+import { wm_md5, wm_aes } from '@/utilities/crypto.js'
+import { useCommonStore } from '@/stores/common.js'
+import { sessionStorageObj } from '@/utilities/storage.js'
 import EyesIcon from '@/components/EyesIcon/index.vue'
 import TermItem from '@/components/TermItem/index.vue'
 import TermPopup from '@/components/TermPopup/index.vue'
 import WrongMessage from '@/components/WrongMessage/index.vue'
-import mmrmApi from '@/api/mmrm.js'
-import { wm_md5, wm_aes } from '@/utilities/crypto.js'
 
 const { t } = useI18n()
 const veeForm = ref(null)
@@ -225,6 +227,7 @@ const termList = reactive({ data: [] })
 const brandList = reactive({ data: [] })
 const storeList = reactive({ data: [] })
 const tipInfo = reactive({ content: '' })
+const commonStore = useCommonStore()
 
 const ruleSchema = reactive({
   mobile: 'required|phone',
@@ -324,9 +327,26 @@ const registerCheck = async() => {
   return { status: rcrm.RC === 'C01', message: rcrm.RM }
 }
 
-const handleError = (message) => {
-  tipInfo.content = message
-  errorModal.value.toggle()
+const register = async() => {
+  const { gender, password, mobile, birthday, referrer_code, name, recommend_store_code } = formData
+  const payload = {
+    gender,
+    password: wm_aes(wm_md5(password)),
+    mobile: wm_aes(mobile),
+    birthday,
+    referrer_code,
+    name,
+    recommend_store_code
+  }
+  const { rcrm, results } = await mmrmApi.register({ data: { register: payload } })
+  const { RC, RM } = rcrm
+  const status = RC === 'C01'
+  return { status, message: RM, token: status ? results.temp_access_token : '' }
+}
+
+const saveUserData = (token) => {
+  sessionStorageObj.setItem(commonStore.userDataKey, formData)
+  sessionStorageObj.setItem(commonStore.tempTokenKey, { token })
 }
 
 const submitHandler = async() => {
@@ -335,12 +355,24 @@ const submitHandler = async() => {
   const allTermIsRead = checkTermIsRead()
   isLoading.value = true
   if (formIsValid === false || allTermIsRead === false) return
-  const checkRes =  await registerCheck()
+  const checkRes = await registerCheck()
   if (!checkRes.status) {
     handleError(checkRes.message)
     isLoading.value = false
     return
   }
+  const registerRes = await register()
+  if (!registerRes.status) {
+    handleError(registerRes.message)
+    isLoading.value = false
+    return
+  }
+  saveUserData(registerRes.token)
+}
+
+const handleError = (message) => {
+  tipInfo.content = message
+  errorModal.value.toggle()
 }
 
 const errorConfirm = () => {

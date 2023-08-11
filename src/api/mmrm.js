@@ -44,6 +44,13 @@ const mmrmApi = {
       ...params
     })
   },
+  register(params = {}) {
+    return useBaseAxios({
+      url: '/member/register',
+      method: 'post',
+      ...params
+    })
+  },
 }
 
 export default mmrmApi
