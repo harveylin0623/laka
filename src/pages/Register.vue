@@ -241,11 +241,11 @@ const ruleSchema = reactive({
 const genderList = reactive({ 'M': '男性', 'F': '女性', 'S': '保密' })
 
 const formData = reactive({
-  mobile: '0986104667',
-  password: 'abc123',
-  confirm_password: 'abc123',
-  name: 'apple',
-  gender: 'M',
+  mobile: '',
+  password: '',
+  confirm_password: '',
+  name: '',
+  gender: '',
   birthday: '',
   brand_id: -1,
   recommend_store_code: '',
@@ -273,7 +273,7 @@ const setFlatPickerDate = () => {
 const createTermList = (lists) => {
   if (lists.length === 0) return []
   return lists[0].terms.reduce((prev, current) => {
-    prev.push({ ...current, isChecked: true, isOpen: false })
+    prev.push({ ...current, isChecked: false, isOpen: false })
     return prev
   }, [])
 }
@@ -379,6 +379,18 @@ const errorConfirm = () => {
   errorModal.value.toggle()
 }
 
+const retriveUserData = async() => {
+  const storage = sessionStorageObj.getItem(commonStore.userDataKey)
+  if (storage === null) return
+  for (let key in storage) {
+    if (key === 'recommend_store_code') continue
+    formData[key] = storage[key]
+  }
+  await brandChange()
+  formData.recommend_store_code = storage.recommend_store_code
+  termList.data.forEach(item => { item.isChecked = true })
+}
+
 const init = async() => {
   isLoading.value = true
   const [termData, brandData] = await Promise.all([
@@ -390,6 +402,7 @@ const init = async() => {
   })
   termList.data = createTermList(termData.results.term_information)
   brandList.data = brandInfo.results.brand_information
+  await retriveUserData()
   isLoading.value = false
 }
 
