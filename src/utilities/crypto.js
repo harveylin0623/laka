@@ -1,4 +1,6 @@
 import CryptoJS from 'crypto-js'
+const key = CryptoJS.enc.Utf8.parse('2qSGJxgFKzivef2nf41yP9o1gXiePA0R')
+const iv = CryptoJS.enc.Utf8.parse('Cjf06A93dAv9bnq8')
 
 export const wm_sign = (body) => {
   const payload = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(JSON.stringify(body)))
@@ -17,4 +19,23 @@ export const wm_aes = (input) => {
   const iv = CryptoJS.enc.Hex.parse(keyHash.toString().substring(64,96))
   const encrypted = CryptoJS.AES.encrypt(input, key, { iv: iv })
   return encrypted.toString()
+}
+
+export const aesEncrypt = (text) => {
+  const cipher = CryptoJS.AES.encrypt(text, key, {
+    iv: iv,
+    mode: CryptoJS.mode.CBC,
+    padding: CryptoJS.pad.Pkcs7
+  })
+  return cipher.toString()
+}
+
+//key如果錯會回傳空字串,iv錯會報錯誤
+export const aesDecrypt = (text) => {
+  const cipher = CryptoJS.AES.decrypt(text, key, {
+    iv,
+    mode: CryptoJS.mode.CBC,
+    padding: CryptoJS.pad.Pkcs7
+  })
+  return cipher.toString(CryptoJS.enc.Utf8)
 }

@@ -183,6 +183,11 @@
   />
 
   <TipModal
+    ref="paramsModal"
+    modal-content="參數有誤，有待確認"
+  />
+
+  <TipModal
     ref="errorModal"
     :modal-content="tipInfo.content"
     @confirm="errorConfirm"
@@ -200,6 +205,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { useI18n } from 'vue-i18n'
 import dayjs from 'dayjs'
@@ -208,7 +214,7 @@ import flatPickr from 'vue-flatpickr-component'
 import zhTw from 'flatpickr/dist/l10n/zh-tw'
 import 'flatpickr/dist/flatpickr.css'
 import mmrmApi from '@/api/mmrm.js'
-import { wm_md5, wm_aes } from '@/utilities/crypto.js'
+import { wm_md5, wm_aes, aesDecrypt } from '@/utilities/crypto.js'
 import { useCommonStore } from '@/stores/common.js'
 import { sessionStorageObj } from '@/utilities/storage.js'
 import EyesIcon from '@/components/EyesIcon/index.vue'
@@ -216,8 +222,11 @@ import TermItem from '@/components/TermItem/index.vue'
 import TermPopup from '@/components/TermPopup/index.vue'
 import WrongMessage from '@/components/WrongMessage/index.vue'
 
+const route = useRoute()
 const { t } = useI18n()
+const commonStore = useCommonStore()
 const veeForm = ref(null)
+const paramsModal = ref(null)
 const errorModal = ref(null)
 const visible1 = ref(false)
 const visible2 = ref(false)
@@ -227,7 +236,7 @@ const termList = reactive({ data: [] })
 const brandList = reactive({ data: [] })
 const storeList = reactive({ data: [] })
 const tipInfo = reactive({ content: '' })
-const commonStore = useCommonStore()
+let tempMobile = '' //暫存url decode的mobile
 
 const ruleSchema = reactive({
   mobile: 'required|phone',
@@ -261,6 +270,22 @@ const flatPickerConfig = reactive({
 })
 
 const hasTermData = computed(() => termList.data.length > 0)
+
+const parseUrlParams = () => {
+  const { mobile, redirect_url } = route.query
+  if (redirect_url === undefined || redirect_url === '') {
+    paramsModal.value.toggle()
+    return false
+  }
+  try {
+    let decodeMobile = aesDecrypt(mobile)
+    tempMobile = decodeMobile
+    sessionStorageObj.setItem(commonStore.urlParamsKey, { mobile, redirect_url })
+  } catch(err) {
+    console.log(err)
+  }
+  return true
+}
 
 const setFlatPickerDate = () => {
   const maxDate = dayjs().subtract(18, 'year').month(0).date(1)
@@ -391,7 +416,7 @@ const retriveUserData = async() => {
   termList.data.forEach(item => { item.isChecked = true })
 }
 
-const init = async() => {
+const getApiData = async() => {
   isLoading.value = true
   const [termData, brandData] = await Promise.all([
     mmrmApi.term(),
@@ -402,12 +427,19 @@ const init = async() => {
   })
   termList.data = createTermList(termData.results.term_information)
   brandList.data = brandInfo.results.brand_information
+  formData.mobile = tempMobile
   await retriveUserData()
   isLoading.value = false
 }
 
-onMounted(async() => {
+const init = async() => {
+  const isValid = parseUrlParams()
+  if (!isValid) return
   setFlatPickerDate()
+  getApiData()
+}
+
+onMounted(async() => {
   init()
 })
 
