@@ -1,31 +1,34 @@
 <template>
   <p class="pl-[15px] mb-2.5 text-primary-1">必填資訊</p>
-  <VeeForm ref="veeForm">
+  <VeeForm
+    ref="veeForm"
+    :validation-schema="ruleSchema"
+  >
     <div class="form-block mb-2.5 divide-y divide-primary-2">
       <div class="flex items-center py-[5px]">
         <p>手機號碼</p>
         <div class="grow">
           <Field
+            v-model.trim="formData.mobile"
             type="text"
-            name="phone"
+            name="mobile"
             class="form-control"
-            :placeholder="t('placeholder.phone')"
-            rules="required|phone"
+            :placeholder="t('placeholder.mobile')"
             inputmode="numeric"
           />
-          <WrongMessage name="phone" />
+          <WrongMessage name="mobile" />
         </div>
       </div>
       <div class="flex items-center py-[5px]">
         <p>密碼</p>
         <div class="relative grow">
           <Field
+            v-model.trim="formData.password"
             v-visible="visible1"
             type="password"
             name="password"
             class="form-control !pr-8"
             :placeholder="t('placeholder.password')"
-            rules="required|password"
           />
           <EyesIcon v-model="visible1" />
           <WrongMessage name="password" />
@@ -35,12 +38,12 @@
         <p>密碼確認</p>
         <div class="relative grow">
           <Field
+            v-model.trim="formData.confirm_password"
             v-visible="visible2"
             type="password"
             name="confirm_password"
             class="form-control !pr-8"
             :placeholder="t('placeholder.password')"
-            rules="required|confirmed:password"
           />
           <EyesIcon v-model="visible2" />
           <WrongMessage name="confirm_password" />
@@ -53,28 +56,31 @@
         <p>姓名</p>
         <div class="grow">
           <Field
+            v-model.trim="formData.name"
             type="text"
-            name="userName"
+            name="name"
             class="form-control"
-            :placeholder="t('placeholder.userName')"
-            rules="required"
+            :placeholder="t('placeholder.name')"
           />
-          <WrongMessage name="userName" />
+          <WrongMessage name="name" />
         </div>
       </div>
       <div class="flex items-center py-[5px]">
-        <p>姓別</p>
+        <p>性別</p>
         <div class="grow">
           <Field
             v-model="formData.gender"
             as="select"
             name="gender"
             class="form-control"
-            rules="required"
           >
-            <option value="M">男性</option>
-            <option value="F">女性</option>
-            <option value="S">保密</option>
+            <option
+              v-for="value, key in genderList"
+              :key="key"
+              :value="key"
+            >
+              {{ value }}
+            </option>
           </Field>
           <WrongMessage name="gender" />
         </div>
@@ -140,13 +146,13 @@
         <p>好友邀請碼</p>
         <div class="grow">
           <Field
+            v-model="formData.referrer_code"
             type="text"
-            name="recommend_code"
+            name="referrer_code"
             class="form-control"
-            rules="recommend_code"
-            :placeholder="t('placeholder.recommend_code')"
+            :placeholder="t('placeholder.referrer_code')"
           />
-          <WrongMessage name="recommend_code" />
+          <WrongMessage name="referrer_code" />
         </div>
       </div>
     </div>
@@ -162,6 +168,7 @@
         v-for="term in termList.data"
         :key="term.id"
         :term-info="term"
+        :is-verified="isFirstVerified"
         @term-pop="openTermPopup"
       />
     </div>
@@ -179,7 +186,12 @@
 
   <Loading :is-loading="isLoading" />
 
-  <button class="btn btn-primary w-full">確定</button>
+  <button
+    class="btn btn-primary w-full"
+    @click="submitHandler"
+  >
+    確定
+  </button>
 </template>
 
 <script setup>
@@ -203,14 +215,32 @@ const tipModal1 = ref(null)
 const visible1 = ref(false)
 const visible2 = ref(false)
 const isLoading = ref(false)
+const isFirstVerified = ref(false)
 const termList = reactive({ data: [] })
 const brandList = reactive({ data: [] })
 const storeList = reactive({ data: [] })
+
+const ruleSchema = reactive({
+  mobile: 'required|phone',
+  password: 'required|password',
+  confirm_password: 'required|confirmed:password',
+  name: 'required',
+  gender: 'required',
+  referrer_code: 'referrer_code'
+})
+
+const genderList = reactive({ 'M': '男性', 'F': '女性', 'S': '保密' })
+
 const formData = reactive({
-  brand_id: -1,
-  gender: '',
+  mobile: '',
+  password: '',
+  confirm_password: '',
+  name: '',
+  gender: 'M',
   birthday: '',
-  recommend_store_code: ''
+  brand_id: -1,
+  recommend_store_code: '',
+  referrer_code: ''
 })
 
 const flatPickerConfig = reactive({
@@ -264,10 +294,16 @@ const getStoreList = async() => {
 
 const brandChange = async() => {
   isLoading.value = true
-  let list = await getStoreList()
+  const list = await getStoreList()
   formData.recommend_store_code = list.length > 0 ? list[0].code : ''
   storeList.data = list
   isLoading.value = false
+}
+
+const submitHandler = async() => {
+  isFirstVerified.value = true
+  const { valid:formIsValid } = await veeForm.value.validate()
+  console.log(formIsValid)
 }
 
 const init = async() => {
