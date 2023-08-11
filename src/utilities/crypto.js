@@ -10,3 +10,11 @@ export const wm_sign = (body) => {
 export const wm_md5 = (text) => {
   return CryptoJS.MD5(text).toString()
 }
+
+export const wm_aes = (input) => {
+  const keyHash = CryptoJS.SHA384(import.meta.env.VITE_AES_KEY)
+  const key = CryptoJS.enc.Hex.parse(keyHash.toString().substring(0,64))
+  const iv = CryptoJS.enc.Hex.parse(keyHash.toString().substring(64,96))
+  const encrypted = CryptoJS.AES.encrypt(input, key, { iv: iv })
+  return encrypted.toString()
+}

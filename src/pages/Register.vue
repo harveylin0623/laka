@@ -182,9 +182,11 @@
     @agree="agreeTerm"
   />
 
-  <TipModal ref="tipModal1" />
-
-  <Loading :is-loading="isLoading" />
+  <TipModal
+    ref="errorModal"
+    :modal-content="tipInfo.content"
+    @confirm="errorConfirm"
+  />
 
   <button
     class="btn btn-primary w-full"
@@ -192,6 +194,8 @@
   >
     確定
   </button>
+
+  <Loading :is-loading="isLoading" />
 </template>
 
 <script setup>
@@ -208,10 +212,11 @@ import TermItem from '@/components/TermItem/index.vue'
 import TermPopup from '@/components/TermPopup/index.vue'
 import WrongMessage from '@/components/WrongMessage/index.vue'
 import mmrmApi from '@/api/mmrm.js'
+import { wm_md5, wm_aes } from '@/utilities/crypto.js'
 
 const { t } = useI18n()
 const veeForm = ref(null)
-const tipModal1 = ref(null)
+const errorModal = ref(null)
 const visible1 = ref(false)
 const visible2 = ref(false)
 const isLoading = ref(false)
@@ -219,6 +224,7 @@ const isFirstVerified = ref(false)
 const termList = reactive({ data: [] })
 const brandList = reactive({ data: [] })
 const storeList = reactive({ data: [] })
+const tipInfo = reactive({ content: '' })
 
 const ruleSchema = reactive({
   mobile: 'required|phone',
@@ -232,10 +238,10 @@ const ruleSchema = reactive({
 const genderList = reactive({ 'M': '男性', 'F': '女性', 'S': '保密' })
 
 const formData = reactive({
-  mobile: '',
-  password: '',
-  confirm_password: '',
-  name: '',
+  mobile: '0986104667',
+  password: 'abc123',
+  confirm_password: 'abc123',
+  name: 'apple',
   gender: 'M',
   birthday: '',
   brand_id: -1,
@@ -264,7 +270,7 @@ const setFlatPickerDate = () => {
 const createTermList = (lists) => {
   if (lists.length === 0) return []
   return lists[0].terms.reduce((prev, current) => {
-    prev.push({ ...current, isChecked: false, isOpen: false })
+    prev.push({ ...current, isChecked: true, isOpen: false })
     return prev
   }, [])
 }
@@ -300,10 +306,45 @@ const brandChange = async() => {
   isLoading.value = false
 }
 
+const checkTermIsRead = () => {
+  return termList.data.every(item => item.isChecked)
+}
+
+const registerCheck = async() => {
+  const { gender, password, mobile, birthday, referrer_code, name } = formData
+  const payload = {
+    gender,
+    password: wm_aes(wm_md5(password)),
+    mobile: wm_aes(mobile),
+    birthday,
+    referrer_code,
+    name
+  }
+  const { rcrm } = await mmrmApi.register_check({ data: { register_check: payload } })
+  return { status: rcrm.RC === 'C01', message: rcrm.RM }
+}
+
+const handleError = (message) => {
+  tipInfo.content = message
+  errorModal.value.toggle()
+}
+
 const submitHandler = async() => {
   isFirstVerified.value = true
   const { valid:formIsValid } = await veeForm.value.validate()
-  console.log(formIsValid)
+  const allTermIsRead = checkTermIsRead()
+  isLoading.value = true
+  if (formIsValid === false || allTermIsRead === false) return
+  const checkRes =  await registerCheck()
+  if (!checkRes.status) {
+    handleError(checkRes.message)
+    isLoading.value = false
+    return
+  }
+}
+
+const errorConfirm = () => {
+  errorModal.value.toggle()
 }
 
 const init = async() => {

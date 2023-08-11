@@ -36,7 +36,14 @@ const mmrmApi = {
       method: 'post',
       ...params
     })
-  }
+  },
+  register_check(params = {}) {
+    return useBaseAxios({
+      url: '/member/register_check',
+      method: 'post',
+      ...params
+    })
+  },
 }
 
 export default mmrmApi
