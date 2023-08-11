@@ -34,7 +34,3 @@ defineOptions({
 })
 
 </script>
-
-<style>
-
-</style>

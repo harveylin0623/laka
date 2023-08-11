@@ -3,7 +3,7 @@
     id="default-layout"
     class="pb-5 bg-base min-h-screen"
   >
-    <div class="flex justify-center items-center h-[40px] text-white bg-page-name text-base">{{ pageName }}</div>
+    <div class="flex justify-center items-center h-[40px] text-white bg-page-name">{{ pageName }}</div>
     <div class="container">
       <img
         class="mb-[25px] mx-auto"

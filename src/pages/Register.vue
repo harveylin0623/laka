@@ -205,7 +205,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { useI18n } from 'vue-i18n'
 import dayjs from 'dayjs'
@@ -223,6 +223,7 @@ import TermPopup from '@/components/TermPopup/index.vue'
 import WrongMessage from '@/components/WrongMessage/index.vue'
 
 const route = useRoute()
+const router = useRouter()
 const { t } = useI18n()
 const commonStore = useCommonStore()
 const veeForm = ref(null)
@@ -254,7 +255,7 @@ const formData = reactive({
   password: '',
   confirm_password: '',
   name: '',
-  gender: '',
+  gender: 'M',
   birthday: '',
   brand_id: -1,
   recommend_store_code: '',
@@ -378,8 +379,8 @@ const submitHandler = async() => {
   isFirstVerified.value = true
   const { valid:formIsValid } = await veeForm.value.validate()
   const allTermIsRead = checkTermIsRead()
-  isLoading.value = true
   if (formIsValid === false || allTermIsRead === false) return
+  isLoading.value = true
   const checkRes = await registerCheck()
   if (!checkRes.status) {
     handleError(checkRes.message)
@@ -393,6 +394,7 @@ const submitHandler = async() => {
     return
   }
   saveUserData(registerRes.token)
+  router.push('/register2')
 }
 
 const handleError = (message) => {
