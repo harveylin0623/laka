@@ -10,6 +10,6 @@ export const sessionStorageObj = {
     return data !== null ? JSON.parse(data) : null
   },
   remoiveItem(key) {
-    sessionStorage.remoiveItem(key)
+    sessionStorage.removeItem(key)
   }
 }

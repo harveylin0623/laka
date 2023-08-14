@@ -13,11 +13,13 @@
       <slot></slot>
     </div>
   </div>
+  <RedirectModal />
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import RedirectModal from '@/components/Modal/RedirectModal.vue'
 import step1Img from '@/assets/image/step01@3x.png'
 import step2Img from '@/assets/image/step02@3x.png'
 import step3Img from '@/assets/image/logo.png'
