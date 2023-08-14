@@ -25,5 +25,8 @@
     "referrer_code": "請輸入邀請碼",
     "new_mobile": "請輸入新的手機號碼"
   },
+  "modal_content": {
+    "verify_ok": "手機號碼驗證成功！歡迎加入會員。"
+  },
   "send_verify_text": "已寄送驗證碼至 {mobile}，若您未收到驗證碼，請按下方「重新寄送驗證碼」。"
 }

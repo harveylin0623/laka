@@ -65,6 +65,13 @@ const mmrmApi = {
       ...params
     })
   },
+  register_verify(params = {}) {
+    return useBaseAxios({
+      url: '/member/register_verify',
+      method: 'post',
+      ...params
+    })
+  }
 }
 
 export default mmrmApi

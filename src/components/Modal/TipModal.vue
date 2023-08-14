@@ -23,7 +23,7 @@
           class="grow h-[40px] text-center leading-[40px]"
           @click="confirmHandler"
         >
-          確定
+          {{ confirmText }}
         </div>
       </div>
     </template>
@@ -36,7 +36,8 @@ import { ref } from 'vue'
 defineProps({
   modalTitle: { type: String, default: '提示' },
   modalContent: { type: String, default: '' },
-  showCancel: { type: Boolean, default: false }
+  showCancel: { type: Boolean, default: false },
+  confirmText: { type: String, default: '確定' }
 })
 
 const emit = defineEmits(['confirm'])

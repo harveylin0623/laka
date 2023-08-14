@@ -50,11 +50,19 @@
     @confirm="tip1ModalToggle"
   />
 
+  <TipModal
+    ref="tipModal2"
+    :modal-content="tipInfo2.content"
+    confirm-text="繼續點餐"
+    @confirm="openOutsideWeb"
+  />
+
   <Loading :is-loading="isLoading" />
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { useHead } from '@unhead/vue'
 import { Form as VeeForm, Field } from 'vee-validate'
@@ -62,15 +70,19 @@ import WrongMessage from '@/components/WrongMessage/index.vue'
 import { useCommonStore } from '@/stores/common.js'
 import { useCheckHasUserData } from '@/composables/useCheckHasUserData.js'
 import { sessionStorageObj } from '@/utilities/storage.js'
+import { aesEncrypt } from '@/utilities/crypto.js'
 import mmrmApi from '@/api/mmrm.js'
 
 const { t } = useI18n()
 const { checkHasUserData } = useCheckHasUserData()
 const commonStore = useCommonStore()
+const { userDataKey, tempTokenKey, urlParamsKey } = storeToRefs(commonStore)
 const veeForm = ref(null)
 const tipModal1 = ref(null)
+const tipModal2 = ref(null)
 const isLoading = ref(false)
 const tipInfo = reactive({ content: '' })
+const tipInfo2 = reactive({ content: t('modal_content.verify_ok') })
 
 const ruleSchema = reactive({
   verifyConde: 'required',
@@ -82,25 +94,47 @@ const formData = reactive({
 })
 
 const getUserMobiler = () => {
-  const userData = sessionStorageObj.getItem(commonStore.userDataKey)
+  const userData = sessionStorageObj.getItem(userDataKey.value)
   formData.mobile = userData.mobile
-}
-
-const sendAgain = async() => {
-  isLoading.value = true
-  const storage = sessionStorageObj.getItem(commonStore.tempTokenKey)
-  const response = await mmrmApi.resend_register_verify({ temp_access_token: storage.token })
-  tipInfo.content = response.rcrm.RM
-  tip1ModalToggle()
-  isLoading.value = false
 }
 
 const tip1ModalToggle = () => {
   tipModal1.value.toggle()
 }
 
-const verifyHandler = async() => {
+const sendAgain = async() => {
+  isLoading.value = true
+  const tokenData = sessionStorageObj.getItem(tempTokenKey.value)
+  const response = await mmrmApi.resend_register_verify({ temp_access_token: tokenData.token })
+  tipInfo.content = response.rcrm.RM
+  tip1ModalToggle()
+  isLoading.value = false
+}
 
+const verifyHandler = async() => {
+  const { valid } = await veeForm.value.validate()
+  if (!valid) return
+  isLoading.value = true
+  const tokenData = sessionStorageObj.getItem(tempTokenKey.value)
+  const response = await mmrmApi.register_verify({
+    temp_access_token: tokenData.token,
+    data: { verify_code: formData.verify_code }
+  })
+  if (response.rcrm.RC === 'C01') {
+    tipModal2.value.toggle()
+  } else {
+    tipInfo.content = response.rcrm.RM
+    tip1ModalToggle()
+  }
+  isLoading.value = false
+}
+
+const openOutsideWeb = () => {
+  const userData = sessionStorageObj.getItem(userDataKey.value)
+  const mobile = aesEncrypt(userData.mobile)
+  const { redirect_url } = sessionStorageObj.getItem(urlParamsKey.value)
+  const outsideUrl = `${redirect_url}?mobile=${encodeURIComponent(mobile)}`
+  location.href = outsideUrl
 }
 
 const init = () => {
