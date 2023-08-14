@@ -58,6 +58,13 @@ const mmrmApi = {
       ...params
     })
   },
+  update_register_mobile(params = {}) {
+    return useBaseAxios({
+      url: '/member/update_register_mobile',
+      method: 'post',
+      ...params
+    })
+  },
 }
 
 export default mmrmApi

@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router
 import Home from '@/pages/Home.vue'
 import Register from '@/pages/Register.vue'
 import Register2 from '@/pages/Register2.vue'
+import FixMobile from '@/pages/FixMobile.vue'
 
 const hashMode = createWebHashHistory()
 const historyMode = createWebHistory(import.meta.env.VITE_BASE_URL)
@@ -43,6 +44,16 @@ const router = createRouter({
         layout: 'DefaultLayout',
         pageName: '會員註冊',
         setpIndex: 2
+      }
+    },
+    {
+      path: '/fixMobile',
+      name: 'fixMobile',
+      component: FixMobile,
+      meta: {
+        layout: 'DefaultLayout',
+        pageName: '修改手機號碼',
+        setpIndex: 3
       }
     },
     {

@@ -1,6 +1,6 @@
 import { storeToRefs } from 'pinia'
 import { useCommonStore } from '@/stores/common.js'
-import { sessionStorageObj } from '../utilities/storage.js'
+import { sessionStorageObj } from '@/utilities/storage.js'
 
 export const useCheckHasUserData = () => {
   const commonStore = useCommonStore()
