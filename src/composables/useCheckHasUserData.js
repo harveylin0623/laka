@@ -26,5 +26,5 @@ export const useCheckHasUserData = () => {
     return hasUserData
   }
 
-  return { checkHasUserData }
+  return { checkHasUserData, redirectHandler }
 }

@@ -8,7 +8,7 @@
         <p>手機驗證碼</p>
         <div class="grow">
           <Field
-            v-model.trim="formData.verifyCode"
+            v-model.trim="formData.verify_code"
             type="text"
             name="verifyConde"
             class="form-control"
@@ -19,11 +19,22 @@
       </div>
     </div>
   </VeeForm>
+
   <div class="px-[15px]">
     <p class="my-5 text-primary-1 text-sm">{{ t('send_verify_text', { mobile: formData.mobile }) }}</p>
     <div class="space-y-2.5">
-      <button class="btn btn-primary w-full">驗證</button>
-      <button class="btn btn-secondary w-full">重新寄送驗證碼</button>
+      <button
+        class="btn btn-primary w-full"
+        @click="verifyHandler"
+      >
+        驗證
+      </button>
+      <button
+        class="btn btn-secondary w-full"
+        @click="sendAgain"
+      >
+        重新寄送驗證碼
+      </button>
       <router-link
         to="/"
         class="btn btn-secondary w-full"
@@ -32,6 +43,14 @@
       </router-link>
     </div>
   </div>
+
+  <TipModal
+    ref="tipModal1"
+    :modal-content="tipInfo.content"
+    @confirm="tip1ModalToggle"
+  />
+
+  <Loading :is-loading="isLoading" />
 </template>
 
 <script setup>
@@ -41,13 +60,17 @@ import { useHead } from '@unhead/vue'
 import { Form as VeeForm, Field } from 'vee-validate'
 import WrongMessage from '@/components/WrongMessage/index.vue'
 import { useCommonStore } from '@/stores/common.js'
-import { sessionStorageObj } from '../utilities/storage.js'
 import { useCheckHasUserData } from '@/composables/useCheckHasUserData.js'
+import { sessionStorageObj } from '../utilities/storage.js'
+import mmrmApi from '@/api/mmrm.js'
 
 const { t } = useI18n()
-const veeForm = ref(null)
 const commonStore = useCommonStore()
 const { checkHasUserData } = useCheckHasUserData()
+const veeForm = ref(null)
+const tipModal1 = ref(null)
+const isLoading = ref(false)
+const tipInfo = reactive({ content: '' })
 
 const ruleSchema = reactive({
   verifyConde: 'required',
@@ -55,12 +78,29 @@ const ruleSchema = reactive({
 
 const formData = reactive({
   mobile: '',
-  verifyCode: '',
+  verify_code: '',
 })
 
 const getUserMobiler = () => {
   const userData = sessionStorageObj.getItem(commonStore.userDataKey)
   formData.mobile = userData.mobile
+}
+
+const sendAgain = async() => {
+  isLoading.value = true
+  const storage = sessionStorageObj.getItem(commonStore.tempTokenKey)
+  const response = await mmrmApi.resend_register_verify({ temp_access_token: storage.token })
+  tipInfo.content = response.rcrm.RM
+  tip1ModalToggle()
+  isLoading.value = false
+}
+
+const tip1ModalToggle = () => {
+  tipModal1.value.toggle()
+}
+
+const verifyHandler = async() => {
+
 }
 
 const init = () => {

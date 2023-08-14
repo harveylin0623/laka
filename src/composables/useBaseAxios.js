@@ -3,11 +3,15 @@ import dayjs from 'dayjs'
 import { wm_sign } from '@/utilities/crypto.js'
 
 export const useBaseAxios = (options) => {
-  const { data = {}, ...other } = options
+  const { data = {}, temp_access_token, ...other } = options
   const requestSchema = {
     request_parameter: { ...data },
     timestamp: dayjs().format('YYYY/MM/DD HH:mm:ss')
   }
+  if (temp_access_token !== undefined) {
+    requestSchema.temp_access_token = temp_access_token
+  }
+
   const sign = wm_sign(requestSchema)
 
   const baseAxios = axios.create({
